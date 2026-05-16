@@ -80,8 +80,19 @@ class CafeYouthBilling:
 
     def load_menu_from_db(self):
         conn = sqlite3.connect('cafe.db')
-        self.all_menu_items = conn.execute("SELECT name, price FROM menu").fetchall()
+        raw_items = conn.execute("SELECT name, price FROM menu").fetchall()
         conn.close()
+
+        # --- TEMPORARY PRICE HIKE LOOP START ---
+        self.all_menu_items = []
+        for name, price in raw_items:
+            if price <= 150:
+                new_price = price + 20
+            else:
+                new_price = price + 30
+            self.all_menu_items.append((name, new_price))
+        # --- TEMPORARY PRICE HIKE LOOP END ---
+
         self.update_menu_list()
 
     def update_menu_list(self, *args):

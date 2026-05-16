@@ -17,9 +17,25 @@ def index():
 @app.route('/api/menu')
 def get_menu():
     conn = get_db()
-    items = conn.execute("SELECT name, price FROM menu").fetchall()
+    raw_items = conn.execute("SELECT name, price FROM menu").fetchall()
     conn.close()
-    return jsonify([dict(row) for row in items])
+    
+    processed_items = []
+    
+    # --- TEMPORARY PRICE HIKE LOOP START ---
+    for row in raw_items:
+        name = row['name']
+        price = row['price']
+        
+        if price <= 150:
+            price += 20
+        else:
+            price += 30
+            
+        processed_items.append({"name": name, "price": price})
+    # --- TEMPORARY PRICE HIKE LOOP END ---
+
+    return jsonify(processed_items)
 
 @app.route('/api/save_order', methods=['POST'])
 def save_order():
