@@ -60,10 +60,7 @@ def get_reports():
         "today_total": today_total,
         "recent": [dict(row) for row in recent]
     })
-
-if __name__ == '__main__':
-    # '0.0.0.0' makes it accessible to other devices on the same WiFi
-    app.run(host='0.0.0.0', port=5000, debug=True)
     
+# Remove both old IF blocks and replace with this:
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
