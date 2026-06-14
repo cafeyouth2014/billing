@@ -61,12 +61,19 @@
         </thead>
         <tbody id="receipt-body"></tbody>
     </table>
+    <div id="discount-display"></div>
     <div class="receipt-total" id="receipt-total-display"></div>
     <p style="text-align:center; margin-top:20px;">*** Thank You! ***</p>
 </div>
 
 <div class="cart-footer">
     <div id="cart-count">Items in Cart: 0</div>
+    <select id="discount-select" class="btn">
+        <option value="0">No Discount</option>
+        <option value="10">10% Discount</option>
+        <option value="15">15% Discount</option>
+        <option value="20">20% Discount</option>
+    </select>
     <button class="btn btn-confirm" id="view-bill-btn" onclick="generateBillPreview()">PREVIEW BILL</button>
     <button class="btn btn-download" id="download-btn" onclick="saveAsImage()">SAVE BILL PIC & SAVE ORDER 📸</button>
 </div>
@@ -125,8 +132,22 @@
             </tr>
         `).join('');
 
-        const total = cart.reduce((sum, i) => sum + i.total, 0);
-        document.getElementById('receipt-total-display').innerText = "GRAND TOTAL: ₹" + total;
+        const subtotal = cart.reduce((sum, i) => sum + i.total, 0);
+
+        const discountPercent =
+            parseInt(document.getElementById('discount-select').value);
+
+        const discountAmount =
+            Math.round(subtotal * discountPercent / 100);
+
+        const finalTotal =
+            subtotal - discountAmount;
+
+        document.getElementById('discount-display').innerText =
+            `Discount (${discountPercent}%): -₹${discountAmount}`;
+
+        document.getElementById('receipt-total-display').innerText =
+            `GRAND TOTAL: ₹${finalTotal}`;
         
         document.getElementById('download-btn').style.display = 'block';
         document.getElementById('view-bill-btn').style.display = 'none';
